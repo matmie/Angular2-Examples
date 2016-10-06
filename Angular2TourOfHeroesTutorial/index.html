@@ -1,5 +1,6 @@
 <html>
   <head>
+    <base href="/">
     <title>Angular QuickStart</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,13 +14,11 @@
     <!-- 2. Configure SystemJS -->
     <script src="systemjs.config.js"></script>
     <script>
-      System.import('MyFirstApp').catch(function(err){ console.error(err); });
+      System.import('app').catch(function(err){ console.error(err); });
     </script>
   </head>
   <!-- 3. Display the application -->
   <body>
-    <my-first-app>Loading...</my-first-app>
-    <testh7></testh7>
-    <paragraph-text></paragraph-text>
+    <my-app></my-app>
   </body>
 </html>

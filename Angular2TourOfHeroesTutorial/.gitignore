@@ -1,0 +1,7 @@
+typings
+system-config.js*
+MyFirstApp/**/*.js
+MyFirstApp/**/*.map
+node_modules
+jspm_packages
+bower_components
