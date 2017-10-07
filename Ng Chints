@@ -1,0 +1,66 @@
+
+/*PODSTAWOWE KOMENDY CLI*/
+1) Tworzenie projektu
+ng new --help --> new[nazwa_akcji] --help[pomoc]
+ng new hello-world --> new[nowa aplikacja] nazwa_aplikacji
+ng new hello-world --prefix hw --> new[nowa aplikacja] nazwa_aplikacji --prefix[określa_przedrostek_dla_generowanych_selektorów_html] hw[tresc_prefixu]
+
+2) Uruchamianie projektu
+ng serve --help --> serve[nazwa_akcji] --help[pomoc].
+ng serve --> serve[uruchamia_aplikacje] ale jeszcze nie otwiera jej w przeglądarce. Jest w trybie obserwowania zmian na plikach.
+ng serve -o --> serve[uruchamia_aplikacje] -o[otwiera_aplikacje_w_domyślnej_przeglądarce]
+
+CLI podczas uruchomienia tworzy pliki .js i pliki .map, które przechowuje w pamięci i nie ma do nich dostępu. Można jes obejrzeć wykonując polecenie ng build.
+Pliki docelowe po build-zie są oznaczone jako bundle i są dostępne z poziomu przeglądarki. Np plik main.boundle.js będzie zawierał przekształcony kod TypeScript do JavaScript.
+
+3) Generowanie komponentów, modulów, serwisó itp
+ng g --help --> g[nazwa_akcji] --help[pomoc].
+ng g s products/product-quard.service -m app.module --> ng g[generate] s[service] scieżka_od_katalogu_app/nazwa_serwisu -m[rejestracja w module] ściezka_do modułu
+ng g c products/product-detail.component --flat --> ng g[generate] c[component] scieżka_od_katalogu_app/nazwa_componentu --flat[ma nie tworzyć podfolderu tylko zrobić komponent wród plików w podanym katalogu products]
+ng g m products/product --flat -m app.module --> g[generate] m[moduł] ścieżka_z_nazwą_od_folderu_app --flat[bez_tworzenia_podfolderu] -m[tworzony moduł zostanie zaimportowany do innego modułu] nazwa_modułu_do_którego_zostanie_zaimportowany_nowo_tworzony_modul
+
+4) Testowanie aplikacji
+ng test --> testowanie semantyki aplikacji
+ng e2e --> testowanie interakcji z użytkownikiem
+
+5) Udostępnianie aplikacji (deploy)
+ng build --help --> build[nazwa_akcji] --help[pomoc].
+ng build --prod[minimalizuje_wszystko_na_produkcje] --> buduje katalog dist w aplikacji. Jest tam wszystko zamienione na pliki js, które są podpięte pod index.html. Strona jest gotowa do exportu na server producyjny.
+   Przy każdym pliku js jest hashcode co pozwala na załadowanie ponowne plików przez przeglądarkę, jeżeli zostaną zamienione w wersji produkcyjnej. Unikaniemy w ten sposób kłopotu związanego z przechowywaniem plików w pamięci cache.
+ng build --base-href --> zdefinowac start dla strony na serwerze np www.madmatsoft.pl/blog/apka/. Start może być różny na różnych serwerach. 
+
+
+
+
+
+
+5) Struktura katalogu z nowym projektem
+
+1) Folder e2e - end to end testy dla aplikacji
+2) Folder node_modules - zawiera wszystkie paczki, które zostały zdefinowane w pliku package.json w głównym katalogu projektu.
+3) Folder src - zawiera źródła aplikacji.
+    3a) Folder app - zawiera wszystkie komponenety, serwisy i inne pliki aplikacji.
+    3b) Folder assets - zawiera wszystkie media, które będą dodawane do aplikacji [zdjęcia,pliki]
+    3c) Folder environments - ustawienia budowania środowiska dla aplikacji
+        3c1) Plik environment.prod.ts - ustawienia środowiska produkcyjnego
+        3c2) Plik environment.ts - ustawienia środowiska deweloperskiego
+    3d)Plik index.html - pierwszy uruchamiany plik, kiedy użytkownik wchodzi do aplikacji. Nie ma tutaj nic szczególengo prócz <base href='/'> który określa początek strony. Tutaj nie powinno być żadnych dołączanych skryptów.
+    3e)Plik main.ts - ładuje aplikacje. Nigdy nie modyfikuj tego pliku.
+    3f)plik polyfilis.ts - wsparcie dla starszych przeglądarek. Aby to wsparcie włączyć należy odkomentować w tym pliku kilka lini.
+    3g)Plik styles.css - style css dla całej aplikacji. Widoczne wszędzie. Style globalne.
+    3h)Plik test.ts - testowanie aplikacji.
+    3i)Plik tsconfig.app.json - konfiguracja TypeScript. Ta wersja pliku jest przeznaczona do kompilacji plików aplikacji.
+    3j)Plik tsconfig.spec.json - konfiguracja TypeScript. Ta wersja pliku jest przeznaczona do kompilacji opisu/specyfikacji testów.
+    3k)Plik typings.d.ts - plik zawiera typowania dla TypeScript-a??
+4)Plik .angular-cli.json - ustawienia tegow jaki sposób CLI generuje kod i pracuje na plikach aplikacji.
+5)Plik .editorconfig - zawiera ustawienia dla edytora
+6)Plik .gitignore - informuje systemkontroli wersji git, które pliki czy katalogi mają zostać pominięte podczas wrzucania wersji na repozytorium.
+7)Plik karma.conf.js - plik zawiera ustawienia dla aplikacji JavaScript uruchamiającej do testów. Jest używana do UnitTestów.
+8)Plik package.json - plik zawiera informacje o wersjach paczek dołączonych do projektu, które zostają zainstalowane w katalogu node_modules. Można definiować własne skrypty np. "npm test" pod którym kryje się dłuższe wywołanie.
+9)Plik protractor.conf.js - konfiguracja framework-u do testowania end to end.
+10)Plik README.md - Informacje dla ludzi, którzy będą chcieli uczestniczyć w projekcie.
+11)Plik tsconfig.json - Główna konfiguracja TypeScript, którą dziedziczą pliki 3i) i 3j).
+12)Plik tslint.json - Konfiguracja mechanizmu LINT, który sprawdza każdy plik TypeScript pod kątem poprawności, reguł określonych właśnie w tym pliku. Nalezy zmodyfikować ten plik, aby cały zespół pisał kod w taki sam sposób.
+
+
+

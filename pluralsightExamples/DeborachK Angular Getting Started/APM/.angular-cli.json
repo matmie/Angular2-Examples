@@ -7,7 +7,7 @@
     {
       "root": "src",
       "outDir": "dist",
-      "assets": [
+      "assets": [ //Tutaj dodajemy foldery, albo pliki, które będziemy umieszczali w aplikacji
         "assets",
         "api",
         "favicon.ico"
@@ -18,8 +18,8 @@
       "test": "test.ts",
       "tsconfig": "tsconfig.app.json",
       "testTsconfig": "tsconfig.spec.json",
-      "prefix": "pm",
-      "styles": [
+      "prefix": "pm", //Prefix dla aplikacji, domyślnie 'app'
+      "styles": [//Definicja globalnych styli
         "styles.css",
         "../node_modules/bootstrap/dist/css/bootstrap.css"
       ],
