@@ -1,14 +1,31 @@
 
+
+ng eject --> JEŻELI CHCEMY ZREZYGNOWAĆ Z UŻYCIA angularCLI to wpisujemy. Mamy wtedy dostęp do ustawień web-pack-a i większą kontrole.  
+
+
 /*PODSTAWOWE KOMENDY CLI*/
 1) Tworzenie projektu
 ng new --help --> new[nazwa_akcji] --help[pomoc]
 ng new hello-world --> new[nowa aplikacja] nazwa_aplikacji
+ng new hello-world --skip-install - to samo co powyżej tylko nie przeprowadza żmudnej instalacji pakietów node_modules
+ng new hello-world --dry-run - wyświetli tylko liste plików która zostanie zainstalowana, nie zostanie utworzony projekt
 ng new hello-world --prefix hw --> new[nowa aplikacja] nazwa_aplikacji --prefix[określa_przedrostek_dla_generowanych_selektorów_html] hw[tresc_prefixu]
+ng new hello-world --ng5 --> domyślnie instalowana jest wersja, która oficjalnie jest bieżąca tj wersja4. Jeżeli zdarzyłoby się, że jest jakaś wersja wyższa np 5
+                            i nie jest jeszcze oficjalnie wydana to parametr --ng5 utworzy projekt korzystający z tej wersji
+
+ng new hello-world --style scss --> Aplikacja będzie korzystała ze styli scss
+ng new hello-world --routing --> Zostanie utworzona struktura do opisu przekierowań odnośników dla obiektu <router-outlet>
+ng new hello-world --skip-git --> Automat nie utworzy repozytorium git
 
 2) Uruchamianie projektu
 ng serve --help --> serve[nazwa_akcji] --help[pomoc].
 ng serve --> serve[uruchamia_aplikacje] ale jeszcze nie otwiera jej w przeglądarce. Jest w trybie obserwowania zmian na plikach.
 ng serve -o --> serve[uruchamia_aplikacje] -o[otwiera_aplikacje_w_domyślnej_przeglądarce]
+Opcje:
+ --port(Alias -p) --> Port na którym będzie nasłuchiwał serwer.
+ --live-reload(Alias -lr) --> Czy ma nasłuchwać zmian w kodzie?
+ --ssl --> Uruchamiaj uzywając protokołu HTTPS. Mozna dołączyć certyfikaty.
+ --proxy-config(Alias -pc) --> Konfiguracja proxy.
 
 CLI podczas uruchomienia tworzy pliki .js i pliki .map, które przechowuje w pamięci i nie ma do nich dostępu. Można jes obejrzeć wykonując polecenie ng build.
 Pliki docelowe po build-zie są oznaczone jako bundle i są dostępne z poziomu przeglądarki. Np plik main.boundle.js będzie zawierał przekształcony kod TypeScript do JavaScript.
@@ -18,23 +35,72 @@ ng g --help --> g[nazwa_akcji] --help[pomoc].
 ng g s products/product-quard.service -m app.module --> ng g[generate] s[service] scieżka_od_katalogu_app/nazwa_serwisu -m[rejestracja w module] ściezka_do modułu
 ng g c products/product-detail.component --flat --> ng g[generate] c[component] scieżka_od_katalogu_app/nazwa_componentu --flat[ma nie tworzyć podfolderu tylko zrobić komponent wród plików w podanym katalogu products]
 ng g m products/product --flat -m app.module --> g[generate] m[moduł] ścieżka_z_nazwą_od_folderu_app --flat[bez_tworzenia_podfolderu] -m[tworzony moduł zostanie zaimportowany do innego modułu] nazwa_modułu_do_którego_zostanie_zaimportowany_nowo_tworzony_modul
+ng g cl scieżka/nazwaKlasy --> tworzy klase.
+ng g i ścieżka/nazwaInterfejsu --> tworzy interfejs.
+ng g e ścieżka/nazwaEnuma --> tworzy enum.
+ng g p ścieżka/nazwaEnuma --> tworzy pipe. 
+ng g m --routing -> tworzy moduł z doatkowym plikiem do opisywania routingu w obrębie tego modułu.
+ng g guard admin/auth --> tworzy ochrone przed np nieupoważnionym wejściem do admin.
+Opcja:
+ --dry-run (alias -d)--> Pokazuje jakie pliki zostaną wygenerowane, ale bez zapisu ich na dysk.
+ --inline-template (alias -it) --> Czy załączyć treść html inline-owo w pliku komponentu.
+ --inline-style (alias -is) --> Czy załączyć treść css/less/scss w pliku komponentu.
+ --spec true/false --> Czy ma zosać wygenerowany plik SPEC opisujący testy na komponencie.
+ --prefix nazwa --> Możemy zmienić prefix dla komponentu.
+ --view-encapsulation NAZWA(Emulated) (alias -vc) --> Narazie nie wiem co to znaczy //TODO 
+ --change-detection NAZWA(OnPush) (alias -cd) --> Narazie nie wiem co to znaczy //TODO
 
 4) Testowanie aplikacji
 ng test --> testowanie semantyki aplikacji
-ng e2e --> testowanie interakcji z użytkownikiem
+ng test -sr --code-coverage(Alias -cc) --> Tworzy w projekcie folder /coverage gdzie jest zapisana strona, pokazująca pokrycie testami kodu projektu.
+ng e2e --> testowanie interakcji z użytkownikiem.
+ng e2e -ee --> Test e2e z debugowaniem.
+Opcje:
+ -sr --> pojedyncze uruchomienie testów.   
 
-5) Udostępnianie aplikacji (deploy)
+5) Budowanie i Udostępnianie aplikacji (deploy)
 ng build --help --> build[nazwa_akcji] --help[pomoc].
 ng build --prod[minimalizuje_wszystko_na_produkcje] --> buduje katalog dist w aplikacji. Jest tam wszystko zamienione na pliki js, które są podpięte pod index.html. Strona jest gotowa do exportu na server producyjny.
    Przy każdym pliku js jest hashcode co pozwala na załadowanie ponowne plików przez przeglądarkę, jeżeli zostaną zamienione w wersji produkcyjnej. Unikaniemy w ten sposób kłopotu związanego z przechowywaniem plików w pamięci cache.
 ng build --base-href --> zdefinowac start dla strony na serwerze np www.madmatsoft.pl/blog/apka/. Start może być różny na różnych serwerach. 
+ng build --prod -e=prod --> Buduje paczki na produkcje używając opisu z pliku environment.prod.ts.
+ng build --prod -e=dev --> Zbuduje paczki na produkcje używając opisu z pliku environment.ts.
+ng build --dev --> Zbuduje paczki target dev. Domyślnie robi to ng build.
+Opcje: 
+ --sourcemap (Alias -sm) --> Generuje pliki sourcemap. Do debugowania i navigowania.
+ --aot -> Dla --prod aot jest ustawione domyślnie, dlatego można użyć tej flagi dla dev. Żeby wyłączyć aot dla --prod należy użyć 
+ build --prod --aot false --> Wyłącza aot dla produkcji.
+ --watch 
+ --target(Alias -t)=development --environment(Alias -e)=dev --> budowanie projektu dla celów developerskich. Wersja rozszerzona komendy. Domyślnie robi to ng build.
+ --target(Alias -t)=production --environment(Alias -e)=prod --> budowanie projektu na produkcje. Wersja rozszerzona. Domyślnie robi to ng build --prod.
+
+6) Dostęp do dokumentacji
+ng doc component --> ng doc[dokumentacja] component[czego_ma_dotyczyć_dokumentacja_jakiego_skladnika]
+
+7) Sprawdzanie kodu- jego klarowności
+ng lint --> Daje sugestie co trzeba poprawić w kodzie, żeby kod był zgodny z ustawieniami w pliku tslit.json
+ng lint --format stylish --> Formatuje sugestie, żeby były lepiej czytelne.
+ng lint --fix --> Linter spróbuje naprawić problemy. Dobrze przed tym zabiegiem zrobić commit , żeby potem porównac co zostało zmienione i ewentualnie wrócić.
+
+8) Ustawianie zmiennych w pliku .angular-cli.json Dostowsowanie preferencji pod zespół.
+ng set defaults.styleExt scss --> dla danego projektu używaj arkuszy styli SASS.
+ng set defaults.styleExt scss --> globalnie używaj domyślnie styli SASS.
+ng set defaults.component.flat true --> Jeżeli chcemy aby pliki opisujace komponent nie były tworzone w katalogu tylko w podanej ścieżce.
+ng set defaults.directives.flat true --> Jeżeli chcemy aby pliki opisujace dyrektywe nie były tworzone w katalogu tylko w podanej ścieżce.
+//W projekcie JohnPapa AngularCli/opis-struktury-plikow w pliku .angular-cli.json są opisy ustawień które można w ten spossób zmienić używając ng set
+
+9)Inne
+npm list -g @angular/cli --depth=0 --> sprawdzamy czy jest zainstalowany angularCLI
+npm i source-map-explorer --save-dev --> instalacja pakietu source-map-explorer --save-dev powoduje umieszczenie komponentu w projekcie i dopisanie odpowiedniego wpisu
+                                         w pliku package.json w sekcji devDependencies.
+npm i @angular/material --save --> instalacja pakietu, który dołącza się do gałązki dependencies czyli będzie uzywany do kodowania.
+
+SOURCEMAPEXPLORER
+./node_modules/.bin/source-map-explorer dist/bundleFile --> Pozwala podejrzeć strukture pliku bundle. Sprawdzić wielkość pliku i zobaczyć udział poszczególnych komponentów w tej wielkości. 
 
 
 
-
-
-
-5) Struktura katalogu z nowym projektem
+Struktura katalogu z nowym projektem
 
 1) Folder e2e - end to end testy dla aplikacji
 2) Folder node_modules - zawiera wszystkie paczki, które zostały zdefinowane w pliku package.json w głównym katalogu projektu.

@@ -1,0 +1,62 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "project": {
+    "name": "opis-struktury-plikow" //Nazwa projektu
+  },
+  "apps": [
+    {
+      "root": "src", //Gdzie jest kod
+      "outDir": "dist", //Jak nazywa się folder wyjściowy po użyciu build
+      "assets": [ //Jakie są dodatkowe media typu grafiki
+        "assets", //Folder na dodatki
+        "favicon.ico"
+      ],
+      "index": "index.html", //jak będzie nazywał się plik główny aplikacji
+      "main": "main.ts", //gdzie będzie główny JavaScript-owy plik rozruchowy aplikacji
+      "polyfills": "polyfills.ts",//w jakim pliku znajduje się definicja wsparcia dla starszych przeglądarek
+      "test": "test.ts",//gdzie znajduje się plik który będzie uruchamiany w przypadku polecenia npm test
+      "tsconfig": "tsconfig.app.json",//konfiguracja TypeScript
+      "testTsconfig": "tsconfig.spec.json",//konfiguracja TypeScript - testy
+      "prefix": "app",//prefix dla aplikacji 
+      "styles": [
+        "styles.css" //pliki ze stylami dla aplikacji - globalne
+      ],
+      "scripts": [], //pliki ze skryptami dla aplikacji - globalne
+      "environmentSource": "environments/environment.ts", //ustawienia środowiska uruchomieniowego
+      "environments": {
+        "dev": "environments/environment.ts",
+        "prod": "environments/environment.prod.ts" 
+      }
+    }
+  ],
+  "e2e": {
+    "protractor": {
+      "config": "./protractor.conf.js"
+    }
+  },
+  "lint": [
+    {
+      "project": "src/tsconfig.app.json",
+      "exclude": "**/node_modules/**"
+    },
+    {
+      "project": "src/tsconfig.spec.json",
+      "exclude": "**/node_modules/**"
+    },
+    {
+      "project": "e2e/tsconfig.e2e.json",
+      "exclude": "**/node_modules/**"
+    }
+  ],
+  "test": {
+    "karma": {
+      "config": "./karma.conf.js"
+    }
+  },
+  "defaults": { //Ustawianie zmiennych w tym pliku robi się tak
+                 // ng set defaults.styleExt scss - dla danego projektu używamy SASS
+                 // ng set defaults.styleExt scss -g - globalnie używamy scss
+    "styleExt": "css", //jaki typ styli będzie wykorzystywany w projekcie [css,less,scss]
+    "component": {}
+  }
+}
