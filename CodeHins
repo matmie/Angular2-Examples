@@ -33,3 +33,122 @@ KOD
         console.error(msg);
         return Observable.throw(msg);
     }
+
+2) Routing
+    Te komponenty, które będą wykorzystywane w routingu w osobnym pliku app-routing.module.ts 
+    można wyeksportowa jako tablice 
+
+    export cont routableComponents = [comp1, comp2];
+
+    i zawrzeć w deklaracji declares w module app.module.ts. To oczyści trochę główny moduł.
+
+3) Parametr w ścieżce routingu - przekazywanie do komponentu Ex path : 'vehicles/:id'
+    a) SNAPSHOT(dobra metoda jeżeli to id się nie zmieni w obszarze komponentu, pobieranie danych po załadowaniu komponentu)
+       
+       constructor(private route: ActivateRoute){}
+       ngOnInit(){
+           this.id = parseInt(this.route.snapshot.params['id']);
+           this.getSession();
+       }
+
+    b) OBSERVABLE(Jeżeli mamy odnośnik do id, który używa tego samego komponentu)
+       
+       private id:any;
+       constructor(private route: ActivateRoute){}
+       ngOnInit(){
+           this.route.params.map(params => params['id'])
+           .do(id => this.id = parseInt(id))
+           .subscribe(id => this.getVehicle());
+       } 
+    
+    c) RESOLVER(Pobieranie informacji o id przed załadowaniem komponentu, przed wywołaniem routingu)
+
+        @Injectable()
+        export class VehicleResolver implements Resolve<Vehicle>(z '@angular/router'){
+            constructor(
+                private vehicleService: VehicleService, 
+                private router: Router){
+
+            }
+            resolve(route: ActivatedRouterSnapshot, state: RouterStateSnapshot){
+                let id = +route.params['id'];
+                return this.vehicleService.getVehicle(id)
+                        .map(vehicle => vehicle ? vehicle : new Vehicle())
+                        .catch((error: any) => {
+                            console.log(`${error}. Heading back to vehicle list`);
+                            this.router.navigate(['/vehicles']);
+                            return Observable.of(null);
+                        });
+            }
+        }
+
+        W ścieżce
+        {
+            path: 'vehicles/:id',
+            component: VehicleComponent,
+            resolve: {
+                vehicle: VehicleReolver
+            }
+        }
+
+        W komponencie VehicleComponent
+        this.route.data.subscribe((data: {vehicle: Vehicle}) => this.vehicle = data.vehicle); w ngOnInit
+
+4) GUARDS (muszą trafić do listy providers w module aplikacji, żeby były widoczne wszędzie)
+    a) Resolve - wprowadzenie jakiś danych do komponentu
+    b) CanActivate - czy napewno chcemy przejść do tego komponentu. Jak bedzie próba wejścia przez ścieżkę, to sprawdzamy uprawnienia.
+    c) CanActivateChild - Kiedy w określaniu routingu mamy odnośnik children i chcemy też tego pilnować.
+           EX. {
+               path: 'characters',
+               component: CharactersComponent,
+               canActivate: [CanActivateAuthGuard],
+               canActivateChild: [CanActivateAuthGuard],
+               children: [
+                   {path: '', component: CharacterListComponent}
+                   {path: ':id', component: CharacterComponent}
+               ]
+            }
+    d) CanDeactivate - czy nie zostały jakieś nie zapisane dane itp. Sprawdza stan, czy jakis obiekt jest w edycji na przykład.
+    e) CanLoad - podobne do CanActivate. Nie pobierze contentu komponentu jeżeli to przejdzie. Używane przy LazyLoading, żeby nie pobrać kontentu.
+
+5) Eager Loading
+    - Ładujemy moduł podczas startu strony. Idealne rozwiązanie dla modułów, które maj być załadowane użytkownikowi od razu.
+6) Leazy Loading
+    - Ładujemy moduł wtedy, kiedy go potrzebujemy. Kiedy użytkownik uruchomi akcje na routerze.
+    EX.
+       {path: 'characters', loadChildren: 'app/characters/characters.module#CharactersModule'}
+
+7) Preload strategies - ładowanie komponentów w tle.
+    import {PreloadAllModules, NoPreloading} from '@angular/router';
+    @NgModule(
+        {
+            imports: [RouterModule.forRoot(routes, {preloadStrategy: PreloadAllModules})], -wszystko co jest Lazy Loadnig będzie ładowane w tle
+            exports: [RouterModule]
+        }
+    )
+
+    Żeby robić preaload na wybranych modułach to
+    musimy zaimplementować interfejs PreloadingStrategy preload-strategy.ts
+    export class PreloadSelectedModulesList implements PreloadingStrategy {
+        preload(route: Route, load:Function): Observable<any> {
+            return route.data && route.data['preload' ? load() : of(null);
+        }
+    }
+    I należy tego użyć w taki sposób w module z opisem routingu
+    {
+        path: 'speakers', loadChildren: 'app/speakers/speakers.module#SpeakersModule',
+        data: {preload:true}
+    }
+    @NgModule(
+        imports: [RouterModule.forRoot(routes, {preloadStrategy: PreloadSelectedModulesList})], -wszystko co jest Lazy Loadnig będzie ładowane w tle
+        exports: [RouterModule],
+        providers:[PreloadSelectedModulesList]
+
+    )
+
+
+7) Typy modułów - feature modules - zasosowanie na zdjęciu w pliku "Typy modułów - zastosowania.png"
+    a)Domain modules - moduł menu, navigacji. Importowany raz do głównego modułu aplikacji, baz routingu
+    b)Routed modules - moduły do których prowadzi routing.  
+    c)Service feature module - moduł logów, wiadomości, wyjątków. Wszystkie providers, ale żaden component. Core module. Importujemy raz w głównym module bo singleton.
+    d)Widget feature module - wiele instancji, które nie dzielą zasobów. Importujemy w każdym module, gdziechcemy ich użyć. Zawierają komponenty, dyrektywy, pipesy. Nazywane innaczej Shared Modules.
