@@ -1,46 +1,54 @@
-
+<h3>Angular 2 Forms</h3>
 <div class="container">
-    <h3>Employee Form</h3>
-    <form #form="ngForm" novalidate><!--#form="ngForm" - bindowanie formy do zmiennej. novalidate - wyłączenie domyślnych validacji przeglądarki. -->
-        <div class="form-group">
-            <label for="firstNameId">First Name</label>
-            <input id="firstNameId" type="text" class="form-control" name="firstName" ngModel> <!-- ngModel - bindowanie do zmiennej name, musi być nadany atrybut name o innaczej error -->
+    <form form="ngForm">
+        <div class="form-group" style="display:inline-block">
+            <datepicker name="startDate" [(ngModel)]="startDate" 
+                        [showWeeks]="false" 
+                        [datepickerMode]="'month'"
+                        [minDate]="minDate"></datepicker>
+            <!--Każdy atrybut komponentu, w tym przykładzie ng2-bootstrap nalezy opatrzec w nawiasy [] .
+                Jeżeli atrybut ma przyjmować wartość string to warto pamiętać [datepickerMode]="'month'" - dodatkowo jak 
+                nie chce się datepicker zmienic na miesiące to oznacza, że w komponencie jest nadana inicjalna data
+            -->
         </div>
-        <div class="form-group">
-            <label for="lastNameId">Last Name</label>
-            <input id="lastNameId" type="text" class="form-control" name="lastName" ngModel> <!-- ngModel - bindowanie do zmiennej name, musi być nadany atrybut name o innaczej error -->
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="fullTime" ngModel> Full Time Employee
-            </label>
-        </div>
-        <label>Payment Type</label>
-        <div class="radio">
-            <label>
-                <input type="radio" name="pay-type" value="w2" checked> W2
-            </label>
-        </div>
-        <div class="radio">
-            <label>
-                <input type="radio" name="pay-type" value="1099"> 1099
-            </label>
-        </div>
-        <div class="form-group">
-            <label >Primary Language</label>
-            <select class="form-control">
-                <option *ngFor="let lang of languages">
-                    {{ lang }}
-                </option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label >Date Hired</label>
-            <input type="date" class="form-control"> <!-- ngModel - bindowanie do zmiennej name, musi być nadany atrybut name o innaczej error -->
-        </div>
-        <button class="btn btn-primary" type="submit">OK</button>
-    </form>
-</div>
 
-{{ form.pristine }} <!-- Czy forma nie została dotknięta przez użytkownika. Dopóki nie nadamy polą 
-atrybutu ngModel do któregoś z elementu formy, to ta wartość będzie zawsze true.  -->
+        <div class="form-group">
+                <timepicker name="startTime" [(ngModel)]="startTime" 
+                            [showMeridian]="false"
+                            [minuteStep]="15"
+                            >
+                </timepicker>
+            </div>
+        <!-- <div class="btn-group">
+            <label class="btn btn-primary"  [(ngModel)]="radioModel" name="radio-Model">Left</label>
+            <label class="btn btn-primary"  [(ngModel)]="radioModel" name="radio-Model">Center</label>
+            <label class="btn btn-primary"  [(ngModel)]="radioModel" name="radio-Model">Right</label>
+        </div> -->
+
+        <div class="form-group">
+            <rating name="postRating" [(ngModel)]="postRating" 
+            [max]="100"
+            [stateOn]="'glyphicon-check'"
+            [stateOff]="'glyphicon-unchecked'"
+            (onHover)="hover($event)"
+            (onLeave)="leave($event)">
+
+            </rating>
+
+        </div>
+        <h3>{{postRating}}</h3>
+
+        <!-- <div class="form-group">
+            <button type="button" name="onOffSwitch" [(ngModel)]="onOffSwitch" 
+                    class="btn"
+                    [class.btn-primary]="onOffSwitch === 'On'"
+                    btnCheckBox
+                    btnCheckboxTrue="On"
+                    btnCheckBoxFalse="Off"    
+                    >{{onOffSwitch}}            
+                </button>
+        </div> -->
+
+    </form>
+    <h3>{{ startDate}}</h3>
+</div>

@@ -1,31 +1,3 @@
-TEMPLATES
-
-1) Binding klasy
-    [class.nazwaKlasy]="wyrażenieBool" - nadawanie klasy do taga html-owego
-2) Binding atrybutów
-    [attr.aria-label]="wartosc"
-    [src]="wartosc"
-3) Ustawienie CSS-a eventem
-    [style.color]="color"
-    (mouseenter)="color = '#EE0'" - nie koniecznie trzeba wywoływać funkcje. Można ustawić od razu właściwośc w komponencie.
-4) Two-way binding
-    <input [(ngModel)]="character.name">
-5) Directives
-    [ngClass]="{active: isActive, color: myColor}"
-    [ngStyle]="{color: colorPreference}"
-    [style.color]="colorPreference"
-    *ngFor(ex. *ngFor="let character of characters, let i = index") --> i to lokalna zmienna przechowująca index w tablicy
-    *ngIf(ex. *ngIf="currenVehicle")
-    *ngSwitch
-6) Pipes
-   <p>{{eventDate | date:'medium'}}</p>
-   <p>{{eventDate | date:'yMMMd'}}</p> --> Więcej w dokumentacji
-   <p>{{price | currency}}</p>
-   <p>{{price | percent:'1.1-1'}}</p>
-   <p>{{price | number:'1.1-3'}}</p> --> '1.1-3' tzn minCyfrPrzedKropką.minCyfrPoKropce-maxCyfrPoKropce 
-
-
-
 KOD
 1) Catch exception z http observables
     private handleError(error:Response){

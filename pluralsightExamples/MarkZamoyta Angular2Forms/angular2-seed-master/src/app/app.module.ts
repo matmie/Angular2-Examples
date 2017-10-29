@@ -14,6 +14,9 @@ import { RepoListComponent } from './github/repo-list/repo-list.component';
 import { RepoDetailComponent } from './github/repo-detail/repo-detail.component';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { ContactComponent } from './contact/contact.component';
+import { FormPoster } from './services/form-poster.service';
+
+import { DatepickerModule,DatepickerConfig, TimepickerModule, TimepickerConfig, ButtonsModule, RatingModule } from 'ng2-bootstrap';
 
 @NgModule({
   declarations: [
@@ -30,10 +33,17 @@ import { ContactComponent } from './contact/contact.component';
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
-    RouterModule.forRoot(rootRouterConfig, { useHash: true })
+    RouterModule.forRoot(rootRouterConfig, { useHash: true }),
+    DatepickerModule,
+    TimepickerModule,
+    ButtonsModule,
+    RatingModule
   ],
   providers: [
-    GithubService
+    GithubService, 
+    FormPoster,
+    DatepickerConfig,
+    TimepickerConfig
   ],
   bootstrap: [ AppComponent ]
 })

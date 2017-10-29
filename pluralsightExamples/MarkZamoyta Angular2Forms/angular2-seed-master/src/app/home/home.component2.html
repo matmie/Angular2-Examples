@@ -1,0 +1,88 @@
+<h3 *ngIf="languages.length == 0">Loading...</h3>
+<div class="container" *ngIf="languages.length > 0">
+    <h3>Employee Form</h3>
+    <form #form="ngForm" (submit)="submitForm(form)" novalidate><!--#form="ngForm" - bindowanie formy do zmiennej. novalidate - wyłączenie domyślnych validacji przeglądarki. -->
+        <div class="form-group" [class.has-error]="firstName.invalid && firstName.dirty">
+            <label class="control-label" for="firstName">First Name</label>
+            <input #firstName="ngModel" id="firstName" pattern="...+" required type="text" class="form-control" name="first-name" [(ngModel)]="model.firstName"> <!-- ngModel - bindowanie do zmiennej name, musi być nadany atrybut name o innaczej error. Jeżeli zastosujemy samo ngModule to angular będzie przechowywał dane, ale nie będą one związane z modelem -->
+            <!-- Uzycie one-way-binding [ngModel]="model.firstName" spowoduje, że firstName będzie zczytywany z modelu, ale model nie będzie aktualizowany -->
+            <!-- Użycie two-wy-binding [(ngModel)]="model.firstName" spowoduje, że firstName będzie uaktualniane również w modelu-->
+            <div *ngIf="firstName.invalid && firstName.dirty" class="alert alert-danger">First Name is required</div>
+        </div>
+        <h4>First Name Properties: </h4>
+        <pre>
+            Invalid: {{ firstName.invalid }} <!-- Tak dostajemy się do atrybutów modelu ngModel ale dopiero, kidy zrobimy przypisanie 
+                                         #firstName="ngModel" -->
+            Valid: {{ firstName.valid }} 
+            Touched: {{ firstName.touched }}
+            Untouched: {{ firstName.untouched }}
+            Pristine: {{ firstName.pristine }}
+            Dirty: {{ firstName.dirty }}
+        </pre>
+
+        <div class="form-group">
+            <label>Last Name</label>
+            <input #lastName="ngModel" type="text" required class="form-control" name="last-name" 
+                [ngModel]="model.lastName"
+                (ngModelChange)="firstSignToUpperCase($event)"> <!-- Można użyć dłuższej składni two-way-databinding, zeby podpiąć jakiś event przy zmianie pola -->
+                <div *ngIf="lastName.invalid && lastName.dirty" class="alert alert-danger">Last Name is required</div>    
+            <!-- Inna reprezentacja two-way-databinding
+                [ngModel]="model.lastname" -one-way-databing, żeby wyświetlić wartość
+                (ngModelChange)="model.lastName=$event" -event ngModelChange - przypisanie do modelu wartości $event
+            -->  
+        </div>
+        <h4>Last Name Validation Classes:</h4>
+        <pre>
+            {{ lastName.className }} <!-- Klasy nadawane do elementów w trakcie interakcji z użytkownikiem-->
+        </pre>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="is-full-time" [(ngModel)]="model.isFullTime"> Full Time Employee
+            </label>
+        </div>
+        <label>Payment Type</label>
+        <div class="radio"> <!--Aby binding działał na radio buttonach to atrybut name musi być taki sam jak pole w modelu -->
+            <label>
+                <input type="radio" name="paymentType" value="w2" [(ngModel)]="model.paymentType"> W2
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="paymentType" value="1099" [(ngModel)]="model.paymentType"> 1099
+            </label>
+        </div>
+        <div class="form-group" [class.has-error]="hasPrimaryLanguageError">
+            <label class="control-label">Primary Language</label>
+            <select class="form-control" name="primaryLanguage"
+            #primaryLanguage
+            (blur)="validatePrimaryLanguage(primaryLanguage.value)"
+            (change)="validatePrimaryLanguage(primaryLanguage.value)"
+            [(ngModel)]="model.primaryLanguage">
+                <option value="default">Select a language...</option><!-- Dodajemy domyślną opcje -->
+                <option *ngFor="let lang of languages">
+                    {{ lang }}
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label >Date Hired</label>
+            <input type="date" class="form-control"> <!-- ngModel - bindowanie do zmiennej name, musi być nadany atrybut name o innaczej error -->
+        </div>
+        <button class="btn btn-primary" type="submit"
+        [disabled]="form.invalid">OK</button>
+    </form>
+    Form pristine: {{ form.pristine }} <!-- Czy forma nie została dotknięta przez użytkownika. Dopóki nie nadamy polą 
+        atrybutu ngModel do któregoś z elementu formy, to ta wartość będzie zawsze true.  -->
+    <br />
+    Form valid: {{ form.valid }} <!-- Czy forma jest dobrze wypełniona -->
+    <br />
+    Model:
+        <pre>
+            {{ model | json }} <!-- Tak najlepiej wyświetlać zawartość json w modelu -->
+        </pre>
+    Angular:
+        <pre>
+            {{ form.value | json }} <!-- Ta zmienna przechowuje pola po atrybucie name -->
+        </pre>
+</div>
+

@@ -1,0 +1,42 @@
+1) Klasy validacji
+    ng-untouched - klasa nadawana komponentowi w chwili utworzenia, kiedy element nie był jeszcze ruszany.
+    ng-touched - wystarczy tylko wejść na to pole i z niego zejśc, żeby była nadana ta klasa. 
+                Nastąpiła interakcja, ale ta klasa zostanie nadana dopiero po tym jak element straci focus.
+                Podczas zmiany wartości nie będzie nadawana ta klasa. Dopiero jak zejdziemy z elementu, to klasa się pojawi.
+    ng-pristnie - oznacza, że nie było nic zmieniane w elemencie.
+    ng-dirty - jeżeli użytkownik coś zmienił to bedzie nadawana ta klasa.
+    ng-valid - klasa nadawana kiedy wartość elementu jest poprawna.
+    ng-invalid - kiedy wartośc elementu jest nieprawidłowa.
+
+2) Propertisy ngModel dla validacji - używanie do warunków na formie i w kodzie ts
+    Invalid: {{ firstName.invalid }} <!-- Tak dostajemy się do atrybutów modelu ngModel ale dopiero, kidy zrobimy przypisanie 
+                                         #firstName="ngModel" -->
+    Valid: {{ firstName.valid }} 
+    Touched: {{ firstName.touched }}
+    Untouched: {{ firstName.untouched }}
+    Pristine: {{ firstName.pristine }}
+    Dirty: {{ firstName.dirty }}
+
+3) Binding klasy
+    [class.nazwaKlasy]="wyrażenieBool" - nadawanie klasy do taga html-owego
+4) Binding atrybutów
+    [attr.aria-label]="wartosc"
+    [src]="wartosc"
+5) Ustawienie CSS-a eventem
+    [style.color]="color"
+    (mouseenter)="color = '#EE0'" - nie koniecznie trzeba wywoływać funkcje. Można ustawić od razu właściwośc w komponencie.
+6) Two-way binding
+    <input [(ngModel)]="character.name">
+7) Directives
+    [ngClass]="{active: isActive, color: myColor}"
+    [ngStyle]="{color: colorPreference}"
+    [style.color]="colorPreference"
+    *ngFor(ex. *ngFor="let character of characters, let i = index") --> i to lokalna zmienna przechowująca index w tablicy
+    *ngIf(ex. *ngIf="currenVehicle")
+    *ngSwitch
+8) Pipes
+   <p>{{eventDate | date:'medium'}}</p>
+   <p>{{eventDate | date:'yMMMd'}}</p> --> Więcej w dokumentacji
+   <p>{{price | currency}}</p>
+   <p>{{price | percent:'1.1-1'}}</p>
+   <p>{{price | number:'1.1-3'}}</p> --> '1.1-3' tzn minCyfrPrzedKropką.minCyfrPoKropce-maxCyfrPoKropce                
