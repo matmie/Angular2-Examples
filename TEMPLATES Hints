@@ -21,22 +21,74 @@
     [class.nazwaKlasy]="wyrażenieBool" - nadawanie klasy do taga html-owego
 4) Binding atrybutów
     [attr.aria-label]="wartosc"
-    [src]="wartosc"
+    [src]="wartosc" - <img [src(atrybut html-owy)]="wartosc z komponentu"
+    [hidden]="!event?.location"
 5) Ustawienie CSS-a eventem
     [style.color]="color"
     (mouseenter)="color = '#EE0'" - nie koniecznie trzeba wywoływać funkcje. Można ustawić od razu właściwośc w komponencie.
+    (click)="doSth()" - binding eventu wywołuje metode z komponentu
 6) Two-way binding
     <input [(ngModel)]="character.name">
 7) Directives
-    [ngClass]="{active: isActive, color: myColor}"
+    [ngClass]="{active: isActive, color: myColor}" 
+              ex. <div [ngClass]="{green:event?.time === '8:00 am', bold:event?.time === '8:00 am'}"></div>
+              ex. Wywołanie metody jeżeli logika jest zawiła <div [ngClass]="getStartTimeClass()"></div>
+                        getStartTimeClass() {
+                            const isEarlyStart = this.event && this.event.time === '8:00 am';
+                            return {green: isEarlyStart, bold: isEarlyStart}; - zwracamy obiekt albo
+                            return 'green bold' jeżeli isEarlyStart === true; w p.p. return '' albo
+                            return ['green','bold'] jezeli isEarlyStart === true; w p.p. return [] 
+                        }
+              ex. <div class="well" [ngClass]="{green:event?.time === '8:00 am', bold:event?.time === '8:00 am'}"></div>
+                  Może być użyte class bo wszystkie klasy z dyrektywy ngClass będą dodane do classList obiektu
     [ngStyle]="{color: colorPreference}"
+              ex. <div [ngStyle]="{'color':event?.time === '8:00 am' ? '#003300' : '#bbb', 
+                                   'font-weight': event?.time === '8:00 am' ? 'bold' : 'normal'}">
+              ex. <div [ngStyle]="getStartTimeStyle">
+                       getStartTimeStyle():any {
+                           if(this.event && this.event.time === '8:00 am'){
+                               return {color:'#003300','font-weight':'bold'}
+                           }
+                           return {}
+                       } 
     [style.color]="colorPreference"
     *ngFor(ex. *ngFor="let character of characters, let i = index") --> i to lokalna zmienna przechowująca index w tablicy
+           ex2. <event-thumbnail *ngFor="let event of events" [event]="event"></event-thumbnail>
     *ngIf(ex. *ngIf="currenVehicle")
-    *ngSwitch
+          ex. <div *ngIf="event?.location"> - czy event jest zainicjalizowany i czy jest tam właściwośc location
+    *ngSwitch(ex <div [ngSwitch]="event?.time">
+                    <span *ngSwitchCase="'8:00 am'">Early Start</span>
+                    <span *ngSwitchCase="'10:00 am'">Late Start</span> 
+                    <span *ngSwitchDefault>Normal Start</span>
+                 </div>)
 8) Pipes
    <p>{{eventDate | date:'medium'}}</p>
    <p>{{eventDate | date:'yMMMd'}}</p> --> Więcej w dokumentacji
    <p>{{price | currency}}</p>
    <p>{{price | percent:'1.1-1'}}</p>
-   <p>{{price | number:'1.1-3'}}</p> --> '1.1-3' tzn minCyfrPrzedKropką.minCyfrPoKropce-maxCyfrPoKropce                
+   <p>{{price | number:'1.1-3'}}</p> --> '1.1-3' tzn minCyfrPrzedKropką.minCyfrPoKropce-maxCyfrPoKropce          
+
+9) Przekazywanie danych do komponentu podrzędnego oraz przekazywanie danych z komponentu podrzędnego do komponentu nadrzędnego
+
+   EX: <event-thumbnail [event]="event1" (eventClick)="handleEventClicked($event)"></event-thumbnail>  
+   [event]="event1" - event to obiekt zdefiniowany w komponencie podrzędnym jako Input() event:IEvent, 
+                      natomiast event1 to obiekt przekazywany z komponentu nadrzędnego.
+   
+   (eventClick)="handleEventClicked($event)" = eventClick jest zdefiniowany w komponencie podrzędnym jako
+                                               @Output() eventClick = new EventEmitter() który emituje dane wartosc 
+                                               oparciu o jakieś zdarzenie w komponencie this.eventClick.emit(dane)
+                                               natomiast handleEventClicked($event) to metoda w komponencie nadrzędnym 
+                                               obsługująca dane z komponentu podrzędnego. Pod $event są dane z funkcji emit.
+
+10) Jak dostać sie do danych komponentu podrzędnego?
+
+    EX: <event-thumbnail #thumbnail [event]="event1"></event-thumbnail>
+    <h3>{{thumbnail.someProperty}}</h3> - dostanie się do właściowości publicznej komponentu podrzędnego.
+    <button class="btn btn-primary" (click)="thumbnail.logFoo()">Log some foo</button>
+
+    Na powyższym przykładzie widać w jaki sposób dostać sie do metody logFoo() komponentu podrzędnego.
+
+11) Sprawdzanie danych czy są prawidłowo zainicjalizowane
+
+    {{event?.location.address}} - zabezpieczamy się przed niezaincjaliowanym obiektem event, ale zakładamy, że location jest zawsze zainicjalizowany
+    {{event?.location?.address}} - zabezpieczamy się przed wszystkim
