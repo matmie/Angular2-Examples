@@ -10,9 +10,21 @@ KOD
     Te komponenty, które będą wykorzystywane w routingu w osobnym pliku app-routing.module.ts 
     można wyeksportowa jako tablice 
 
-    export cont routableComponents = [comp1, comp2];
+    export const routableComponents = [comp1, comp2];
 
     i zawrzeć w deklaracji declares w module app.module.ts. To oczyści trochę główny moduł.
+
+    Aby przejść do innej strony poprzez event to w kontrollerze trzeba dodać metode do obsługi eventu
+    import {Router} from '@angular/router;
+    ...
+    constructor(private _router: Router){
+
+    }
+    ...
+    cancel(){
+        this._router.navigate(['/events']);
+    }
+
 
 3) Parametr w ścieżce routingu - przekazywanie do komponentu Ex path : 'vehicles/:id'
     a) SNAPSHOT(dobra metoda jeżeli to id się nie zmieni w obszarze komponentu, pobieranie danych po załadowaniu komponentu)
@@ -44,7 +56,7 @@ KOD
             }
             resolve(route: ActivatedRouterSnapshot, state: RouterStateSnapshot){
                 let id = +route.params['id'];
-                return this.vehicleService.getVehicle(id)
+                return this.vehicleService.getVehicle(id) //Zawsze zwracamy observabla
                         .map(vehicle => vehicle ? vehicle : new Vehicle())
                         .catch((error: any) => {
                             console.log(`${error}. Heading back to vehicle list`);
@@ -83,6 +95,24 @@ KOD
     d) CanDeactivate - czy nie zostały jakieś nie zapisane dane itp. Sprawdza stan, czy jakis obiekt jest w edycji na przykład.
     e) CanLoad - podobne do CanActivate. Nie pobierze contentu komponentu jeżeli to przejdzie. Używane przy LazyLoading, żeby nie pobrać kontentu.
 
+    Przekierowanie do strony 404 guardCanActivate 
+    import {Router,ActivateRouteSnapshot,CanActivate} from "@angular/router";
+    import {Injectable} from "@angular/core";
+    import {EventService} from 'somewhere';
+
+    @injectable()
+    export class EventRouteActivator implements CanActivate{
+        constructor(private _eventService: EventService, private _router: Router){
+
+        }
+        canActivate(route:ActivateRouteSnapshot){
+           const eventExist = !!this._eventService.getEvent(+route.params['id']); //!! cast to boolean + cast to number
+           if(!eventExist){
+               this._router.navigate(['/404']);
+           }
+           return eventExist;
+        }
+    }
 5) Eager Loading
     - Ładujemy moduł podczas startu strony. Idealne rozwiązanie dla modułów, które maj być załadowane użytkownikowi od razu.
 6) Leazy Loading
@@ -124,3 +154,14 @@ KOD
     b)Routed modules - moduły do których prowadzi routing.  
     c)Service feature module - moduł logów, wiadomości, wyjątków. Wszystkie providers, ale żaden component. Core module. Importujemy raz w głównym module bo singleton.
     d)Widget feature module - wiele instancji, które nie dzielą zasobów. Importujemy w każdym module, gdziechcemy ich użyć. Zawierają komponenty, dyrektywy, pipesy. Nazywane innaczej Shared Modules.
+
+8) Proparowanie opożnienia na mocka-ch 
+    import { Subject, Observable } from 'rxjs/RX';
+    ...
+    getEvents():Observable<IEvents[]> {
+        let subject = new Subject<IEvents[]>(); //Obiekt observable
+        setTimeout(() => {subject.next(EVENTS); subject.complete();}, 2000); //EVENTS - tablica obiektów
+        return subject;
+    }
+
+

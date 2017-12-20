@@ -61,6 +61,7 @@
                     <span *ngSwitchCase="'10:00 am'">Late Start</span> 
                     <span *ngSwitchDefault>Normal Start</span>
                  </div>)
+    ex. <form #loginForm="ngForm" (ngSubmit)="login(loginForm.value)"> - przypisanie metody login jako reakcji na submit formularza #loginForm
 8) Pipes
    <p>{{eventDate | date:'medium'}}</p>
    <p>{{eventDate | date:'yMMMd'}}</p> --> Więcej w dokumentacji
@@ -92,3 +93,14 @@
 
     {{event?.location.address}} - zabezpieczamy się przed niezaincjaliowanym obiektem event, ale zakładamy, że location jest zawsze zainicjalizowany
     {{event?.location?.address}} - zabezpieczamy się przed wszystkim
+
+12) Routing od strony template
+
+    Odwołujemy się poprzez routerLink ex. <a [routerLink]="['/events', event.id]"> gdzie "'/events'" to ścieżka routingu
+                                                                                   a event.id to id obiektu przpisywanego do 
+                                                                                   id w ścieżce routingu "/events/:id"
+
+    Dodatkowo jeżeli chcemy zaznaczyć aktywny link to robimy <a [routerLink]="['/events', event.id]" routerLinkActive="active"> gdzie active to klasa css
+                                                                                                                       np li > a.active {color: #F97924; }   
+    efektem będzie kolorowanie linku, który pasuje do ścieżki więc jeżeli mamy dwa linki /events i /events/new to oba będą pokolorowane bo pasują do wzorca, żeby tego uniknąć
+    dodajemy <a [routerLink]="['/events', event.id]" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">                                                                                                                                               
