@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { User } from "../../models/user";
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user.service';
+import { setTimeout } from 'timers';
 
 @Component({
     selector: 'app-main-content',
@@ -16,8 +17,17 @@ export class MainContentComponent implements OnInit {
 
     ngOnInit() {
         this.route.params.subscribe(params => {
-            const id = params['id'];
-            this.user=this.userService.userById(id);
+            let id = params['id'];
+            if(!id) id =1;
+            this.user = null;
+            this.userService.users.subscribe(users => {
+                if(users.length == 0) return;
+                setTimeout(() => {
+                    this.user=this.userService.userById(id);
+                },1000);
+                //this.user=this.userService.userById(id);
+            });
+            
         })
     }
 
